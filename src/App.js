@@ -3,6 +3,7 @@ import axios from 'axios';
 import MonthsList from './components/MonthsList/MonthsList';
 import sortUsers from './utils/sortUsers';
 import Spinner from './components/Spinner/Spinner';
+import chooseBgColor from './utils/chooseBgColor';
 import './App.css';
 
 class App extends Component {
@@ -20,9 +21,18 @@ class App extends Component {
 
   render () {
     const isLoading = this.state.people.length === 0;
+    let bgColors = [];
+    
+    if (!isLoading) {
+      this.state.people.forEach(user => {
+          let bgColor = chooseBgColor(user.amount);
+          bgColors.push(bgColor);
+      });
+    }
+    
     return (
       <div className="App">
-          {isLoading ? <Spinner /> : <MonthsList users={this.state.people}/>}
+          {isLoading ? <Spinner /> : <MonthsList users={this.state.people} backgrounds={bgColors}/>}
       </div>
     )
   }

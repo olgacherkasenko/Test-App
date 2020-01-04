@@ -1,4 +1,3 @@
-
 const chooseBgColor = (num) => {
     let className = '';
 
@@ -17,8 +16,6 @@ const chooseBgColor = (num) => {
     if ( num >= 11) {
         className = 'red';
     }
-
-
     
     return className;
 }
