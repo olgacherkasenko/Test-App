@@ -1,16 +1,24 @@
 import React from 'react';
-// import chooseBgColor from '../../utils/detectBgColor';
+import chooseBgColor from '../../utils/detectBgColor';
+import classes from './MonthsList.module.css';
 
 const MonthsList = (props) => {
     const monthsNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    console.log(props.users)
-    const listItems = monthsNames.map((item, index) => 
-            <li id={index} key={item}> {item} </li>
+    let bgColors = [];
+    props.users.forEach(user => {
+        let bgColor = chooseBgColor(user.amount);
+        bgColors.push(bgColor);
+    });
+    console.log(bgColors)
+    const listItems = monthsNames.map((item, index) => (
+        <li id={index} key={item} className={bgColors[index]}> {item} </li>
+    )
+           
     );
 
     return (
         <div>
-            <ul>{listItems}</ul>
+            <ul className={classes.Months}>{listItems}</ul>
         </div>
     )
 }
