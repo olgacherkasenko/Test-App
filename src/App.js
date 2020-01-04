@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import axios from 'axios';
+import MonthsList from './components/MonthsList/MonthsList';
+import sortUsers from './utils/sortUsers';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    people: []
+  }
+
+  componentDidMount() {
+    axios.get('https://yalantis-react-school.herokuapp.com/api/task0/users')
+          .then(res => {
+            let people = sortUsers(res.data);
+            this.setState({people: people});
+          })
+  }
+
+  render () {
+    return (
+      <div className="App">
+        <MonthsList users={this.state.people}/>
+      </div>
+    )
+  }
 }
 
 export default App;
