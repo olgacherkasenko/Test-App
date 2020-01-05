@@ -1,0 +1,21 @@
+.Users {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    margin: 2% auto;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+    font-family: 'Ibarra Real Nova', serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #000;
+}
+.Users li {
+    flex: 15%;
+    margin: 0;
+    padding: 0;
+}
