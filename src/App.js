@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Aux from './hoc/Aux';
+import Aux from './hoc/Auxiliary';
 import sortUsers from './utils/sortUsers';
 import chooseBgColor from './utils/chooseBgColor';
 import Spinner from './components/Spinner/Spinner';
