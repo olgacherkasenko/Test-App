@@ -1,100 +1,56 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Aux from './hoc/Auxiliary';
-import sortUsers from './utils/sortUsers';
-import chooseBgColor from './utils/chooseBgColor';
+import { addBgColors, toUsersByMonth } from './utils/sortUsers';
 import Spinner from './components/Spinner/Spinner';
 import MonthsList from './components/MonthsList/MonthsList';
 import UsersList from './components/UsersList/UsersList';
 import './App.css';
 
-// class App extends Component {
-//   state = {
-//     people: [],
-//     activeId: 0,
-//     isHovered: false
-//   }
-
-//   componentDidMount() {
-//     axios.get('https://yalantis-react-school.herokuapp.com/api/task0/users')
-//         .then(res => {
-//             let people = sortUsers(res.data);
-//             this.setState({people: people});
-//         })
-//   } 
-
-//   onMouseLeaveHandler = () => {
-//     this.setState({isHovered: false})
-//   }
-
-//   onMouseEnterHandler = ({target}) => {
-//     const currentId = parseInt(target.id);
-//     this.setState({activeId: currentId, isHovered: true})
-//   }
-
-//   render () {
-//     const isLoading = this.state.people.length === 0;
-//     let bgColors = [];
-
-//     if (!isLoading) {
-//       this.state.people.forEach(user => {
-//           let bgColor = chooseBgColor(user.amount);
-//           bgColors.push(bgColor);
-//       });
-//     }
-
-//     return (
-//       <div className="App">
-//           {isLoading ? <Spinner /> :
-//             <Aux>
-//                 <MonthsList users={this.state.people} backgrounds={bgColors} mouseEnter={this.onMouseEnterHandler} mouseLeave={this.onMouseLeaveHandler}/>
-//                 {this.state.isHovered ? <UsersList users={this.state.people} id={this.state.activeId}/> : ''}
-//             </Aux> 
-//           }
-//       </div>
-//     )
-//   }
-// }
+const USERS_URL = 'https://yalantis-react-school.herokuapp.com/api/task0/users';
 
 function App() {
   const [people, setPeople] = useState([]);
-  const [activeId, setActiveId] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
-  const isLoading = people.length === 0;
+  const [isLoading, setIsLoading] = useState(true);
 
-  let bgColors = [];
-  if (!isLoading) {
-    people.forEach(user => {
-        let bgColor = chooseBgColor(user.amount);
-        bgColors.push(bgColor);
-    });
-  }
+  const onSuccessDataReceiving = data => {
+    const sortedData = data.reduce(toUsersByMonth, {});
+    const dataWithBgColors = addBgColors(sortedData);
+    setPeople(dataWithBgColors);
+    setIsLoading(false);
+};
 
   useEffect(() => {
-    axios.get('https://yalantis-react-school.herokuapp.com/api/task0/users')
-      .then(res => {
-          let people = sortUsers(res.data);
-          setPeople(people);
-      })
-  }, [])
+    axios.get(USERS_URL)
+      .then(({data}) => onSuccessDataReceiving(data))
+        .catch(error => {
+          setIsLoading(false);
+          console.log(error);
+        });
+  }, []);
 
-  const onMouseLeaveHandler = () => {
-    setIsHovered(false);
-  }
 
-  const onMouseEnterHandler = ({target}) => {
-    const currentId = parseInt(target.id);
+  const onMouseLeaveHandler = () => setIsHovered(false);
+
+  const onMouseEnterHandler = ({target: {id}}) => {
+    const currentId = parseInt(id);
+    const activeMonth = people[currentId];
+    setActiveUsers(activeMonth.users);
     setIsHovered(true);
-    setActiveId(currentId);
   }
 
     return (
-      <div className="App">
+      <div className='App'>
           {isLoading ? <Spinner /> :
-            <Aux>
-                <MonthsList users={people} backgrounds={bgColors} mouseEnter={onMouseEnterHandler} mouseLeave={onMouseLeaveHandler}/>
-                {isHovered ? <UsersList users={people} id={activeId}/> : ''}
-            </Aux> 
+            <>
+                <MonthsList 
+                    people={people} 
+                    mouseEnter={onMouseEnterHandler} 
+                    mouseLeave={onMouseLeaveHandler}
+                />
+                {isHovered && <UsersList users={activeUsers}/> }
+            </> 
           }
       </div>
     )

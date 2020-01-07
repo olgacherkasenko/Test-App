@@ -1,16 +1,24 @@
 import React from 'react';
 import classes from './MonthsList.module.css';
 
-const MonthsList = (props) => {
-    const monthsNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const monthsNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+const MonthsList = ( {people, mouseEnter, mouseLeave} ) => {
     const listItems = monthsNames.map((item, index) => (
-            <li id={index} key={item} className={props.backgrounds[index]} onMouseEnter={props.mouseEnter} onMouseLeave={props.mouseLeave}> {item} </li>
+            <li 
+                id={index} 
+                key={item} 
+                className={people[index].color} 
+                onMouseEnter={mouseEnter} 
+                onMouseLeave={mouseLeave}> 
+                {item} 
+            </li>
         )     
     );
 
     return (
         <div>
-            <ul className={classes.Months}>{listItems}</ul>
+            <ul className={classes.Months}> {listItems} </ul>
         </div>
     )
 }
